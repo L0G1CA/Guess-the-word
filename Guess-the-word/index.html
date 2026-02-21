@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Galgje! :D</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <script type="module"  src="main.js" defer></script>
+    </head>
+    <body>
+        <!-- Het menu scherm -->
+        <div class="menuContainer">
+            <div id="mainMenu">
+                <div id="titleArea">
+                    <h1 id="Title">Galgje!</h1>
+                </div>
+                <div id="playButtonArea">
+                    <button class="menuBtn" id="playButton">
+                        <i class="fa-solid fa-play" style="margin-right: 10px;"></i>
+                        Play
+                    </button>
+                </div>
+                <div id="challengesArea">
+                    <button class="menuBtn" id="challengesButton">
+                        <i class="fa-solid fa-puzzle-piece" style="margin-right: 10px;"></i>
+                        Challenges
+                    </button>
+                </div>
+                <div id="scoreArea">
+                    <button class="menuBtn" id="scoreButton">
+                        <i class="fa-solid fa-trophy" style="margin-right: 10px;"></i>
+                        Score
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Het challenges scherm -->
+        <div class="challengesContainer">
+            <div id="challengeSelectArea">
+                <h2>Select Challenge Mode</h2>
+
+                <div id="Selections">
+                    <input type="checkbox" id="lessHearts" class="challenge-checkbox" style="display:none;">
+                    <label for="lessHearts" class="challenge-btn">
+                        <i class="fa-solid fa-heart-crack" style="margin-right: 20px;"></i>
+                        less hearts
+                    </label>
+                    
+                    <input type="checkbox" id="lessTime" class="challenge-checkbox" style="display: none;">
+                    <label for="lessTime" class="challenge-btn">
+                        <i class="fa-solid fa-clock" style="margin-right: 20px;"></i>
+                        less time
+                    </label>
+                    
+                    <input type="checkbox" id="difficultWords" class="challenge-checkbox" style="display: none;">
+                    <label for="difficultWords" class="challenge-btn">
+                        <i class="fa-solid fa-language" style="margin-right: 20px;"></i>
+                        Difficult Words
+                    </label>
+                    
+                    <input type="checkbox" id="fixedAttempts" class="challenge-checkbox" style="display: none;">
+                    <label for="fixedAttempts" class="challenge-btn">
+                        <i class="fa-solid fa-lock" style="margin-right: 20px;"></i>
+                        Fixed Attempts
+                    </label>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-evenly;">
+                    <button class="menuBtn" id="startGameButton">
+                        <i class="fa-solid fa-play" style="margin-right: 10px;"></i>
+                        Start Game
+                    </button>
+                    <button class="menuBtn" id="backToMenuButton">
+                        <i class="fa-solid fa-reply" style="margin-right: 10px;"></i>
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Het score scherm -->
+        <div class="scoreContainer">
+            
+        </div>
+
+        <!-- Het spel scherm -->
+        <div class="gameContainer">
+            <div id="timeArea">
+                <h1 id="time">time left: </h1>
+            </div>
+            <div id="statsArea">
+                <h1 id="score">score</h1>
+            </div>
+            <div id="heartsArea"></div>
+            <div id="wordArea">
+                <h1 id="word"></h1>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <div id="inputArea">
+                    <input id="guess" type="text" placeholder="guess!">
+                    <h1 id="letters"></h1>
+                </div>
+            </div>
+            <div id="hangmanArea">
+                <img id="hangman">
+            </div>
+            <div id="retryArea">
+                <button class="gameBtn" id="retryButton">
+                    <i class="fa-solid fa-rotate" style="margin-right: 5px;"></i>
+                    Retry
+                </button>
+            </div>
+            <div id="quitArea">
+                <button class="gameBtn" id="quitButton">
+                    <i class="fa-solid fa-xmark" style="margin-right: 5px;"></i>
+                    Quit
+                </button>
+            </div>
+        </div>
+    </body>
+</html>
