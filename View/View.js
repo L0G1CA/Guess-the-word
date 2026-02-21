@@ -3,7 +3,7 @@ import { Hangman } from "./Hangman.js";
 export class View {
     constructor(controller) {
         this.controller = controller;
-        this.hangman = new Hangman(this.controller);
+        this.hangman = new Hangman(this.controller, this);
         this.gameStates = this.controller.getGameStates();
 
         this.menuContainer = document.querySelector(".menuContainer");
@@ -15,6 +15,11 @@ export class View {
         this.time = document.getElementById("time");
         this.score = document.getElementById("score");
         this.heartsArea = document.getElementById("heartsArea");
+        this.end = document.querySelector(".endScreen");
+        this.endArea = document.getElementById("endScreenChallengesContent");
+        this.scoreContainer = document.querySelector(".scoreContainer");
+        this.acievedScores = document.getElementById("acievedScores");
+        this.renderedScoreView = false;
     }
 
     // update loop
@@ -27,19 +32,25 @@ export class View {
         // wissel van view aan de hand van de status van het spel
         switch (this.controller.getCurrentGameState()) {
             case this.gameStates.MENU:
+                this.renderedScoreView = false;
                 this.menuContainer.style.display = "grid";
                 break;
 
             case this.gameStates.GAME:
+                this.renderedScoreView = false;
                 this.gameContainer.style.display = "grid";
                 this.gameView();
                 break;
 
             case this.gameStates.SCORE:
-                this.scoreContainer.style.display = "grid";
+                this.scoreContainer.style.display = "flex";
+                if ( this.renderedScoreView ) break;
+                this.renderedScoreView = true;
+                this.scoreView();
                 break;
 
             case this.gameStates.CHALLENGES:
+                this.renderedScoreView = false;
                 this.challengesContainer.style.display = "flex";
                 break;
         }
@@ -98,5 +109,56 @@ export class View {
         // hier word de behaalde score getekend
         const score = this.controller.getScore();
         this.score.textContent = `Score: ${score}`;
+    }
+
+    endView() {
+        this.end.style.display = "block";
+        const score = this.controller.getScore();
+        let html = "";
+        html += `Your score: ${score}<br>`;
+        html += `<br>`;
+        if ( this.controller.getGameChallenge().hearts !== 8 ) {
+            html += `<i class="fa-solid fa-heart-crack" style="margin-right: 20px;"></i>
+            ${this.controller.getGameChallenge().hearts} hearts <br>`;
+        }
+        if ( this.controller.getGameChallenge().words !== "easy" ) {
+            html += `<i class="fa-solid fa-language" style="margin-right: 20px;"></i>
+            difficult words <br>`;
+        }
+        if ( this.controller.getGameChallenge().time !== 600 ) {
+            html += `<i class="fa-solid fa-clock" style="margin-right: 20px;"></i>
+            ${this.controller.getGameChallenge().time / 60} minutes <br>`;
+        }
+        if ( this.controller.getGameChallenge().fixedAttempts !== false ) {
+            html += `<i class="fa-solid fa-lock" style="margin-right: 20px;"></i>
+            fixed attempts <br>`;
+        }
+        this.endArea.innerHTML = html;
+    }
+
+    scoreView() {
+        const scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+        let html = "";
+        scores.forEach((entry, index) => {
+            html += `<p><button class="deleteBtn" data-index="${index}"><i class="fa-solid fa-trash"></i></button> `;
+
+            html += `Name: ${entry.name} - Score: ${entry.score} `;
+
+            if ( entry.challenge.hearts !== 8 ) html += `<i class="fa-solid fa-heart-crack"></i> `;
+            if ( entry.challenge.words !== "easy" ) html += `<i class="fa-solid fa-language"></i> `;
+            if ( entry.challenge.time !== 600 ) html += `<i class="fa-solid fa-clock"></i> `;
+            if ( entry.challenge.fixedAttempts !== false ) html += `<i class="fa-solid fa-lock"></i> `;
+
+            html += `</p>`;
+        });
+        this.acievedScores.innerHTML = html;
+
+        const deleteButtons = this.acievedScores.querySelectorAll(".deleteBtn");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                this.controller.removeScore(button.dataset.index);
+            });
+        });
     }
 }

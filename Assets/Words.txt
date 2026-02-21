@@ -48,7 +48,6 @@ spinnen
 zebra
 bomen
 bloem
-grassen
 bladen
 takken
 strand

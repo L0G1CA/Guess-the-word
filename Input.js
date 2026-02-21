@@ -10,6 +10,12 @@ export class Input {
         const retryButton = document.getElementById("retryButton");
         const startGameButton = document.getElementById("startGameButton");
         const backToMenuButton = document.getElementById("backToMenuButton");
+        const againButton = document.getElementById("againButton");
+        const stopButton = document.getElementById("stopButton");
+        const nameInput = document.getElementById("nameInput");
+        const saveButton = document.getElementById("saveButton");
+        saveButton.classList.add("blocked");
+        const backButton = document.getElementById("back");
 
         this.guessInput = document.getElementById("guess");
 
@@ -53,7 +59,34 @@ export class Input {
         });
         
         backToMenuButton.addEventListener("click", () => {
-            this.controller.changeGameState("backToMenuButton");
+            this.controller.changeGameState("quitButton");
+        });
+        
+        againButton.addEventListener("click", () => {
+            this.controller.changeGameState("retryButton");
+        });
+
+        stopButton.addEventListener("click", () => {
+            this.controller.changeGameState("quitButton");
+        });
+
+        nameInput.addEventListener("input", () => {
+            if ( nameInput.value.trim() ) {
+                saveButton.classList.remove("blocked");
+                saveButton.disabled = false;
+            } else {
+                saveButton.classList.add("blocked");
+                saveButton.disabled = true;
+            }
+        });
+
+        saveButton.addEventListener("click", () => {
+            this.controller.saveScore();
+            this.controller.changeGameState("quitButton");
+        });
+
+        backButton.addEventListener("click", () => {
+            this.controller.changeGameState("quitButton");
         });
     }
 

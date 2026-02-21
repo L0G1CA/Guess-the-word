@@ -81,7 +81,15 @@
 
         <!-- Het score scherm -->
         <div class="scoreContainer">
-            
+            <div id="scores">
+                <h2>Scores:</h2>
+                <div id="acievedScores">
+                </div>
+                <button class="menuBtn" id="back">
+                    <i class="fa-solid fa-reply" style="margin-right: 10px;"></i>
+                    Back
+                </button>
+            </div>
         </div>
 
         <!-- Het spel scherm -->
@@ -116,6 +124,33 @@
                     <i class="fa-solid fa-xmark" style="margin-right: 5px;"></i>
                     Quit
                 </button>
+            </div>
+        </div>
+
+        <!-- Het einde scherm -->
+        <div class="endScreen">
+            <div id="endScreenContent">
+                <h2>Game Over</h2>
+                <h4>Achieved score:</h4>
+                <div id="endScreenChallengesContent">
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; padding: 10px;">
+                    <input type="text" id="nameInput" placeholder="Your name">
+                    <button class="gameBtn" id="saveButton" style="margin-left: 10px;" disabled>
+                        <i class="fa-solid fa-book-bookmark" style="margin-right: 5px;"></i>
+                        Save Score
+                    </button>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center; padding: 10px;">
+                    <button class="gameBtn" id="againButton" style="margin-right: 10px;">
+                        <i class="fa-solid fa-rotate" style="margin-right: 5px;"></i>
+                        Play Again
+                    </button>
+                    <button class="gameBtn" id="stopButton">
+                        <i class="fa-solid fa-xmark" style="margin-right: 5px;"></i>
+                        Quit
+                    </button>
+                </div>
             </div>
         </div>
     </body>
