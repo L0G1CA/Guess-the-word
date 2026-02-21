@@ -26,7 +26,7 @@ export class Controller {
         this.timerInterval = null;
 
         this.gameChallenge = {
-            hearts: 7,
+            hearts: 8,
             words: "easy",
             time: 600,
             fixedAttempts: false
@@ -54,6 +54,7 @@ export class Controller {
                 this.gameState = gameStates.SCORE;
                 break;
             case "quitButton":
+                this.view.end.style.display = "none";
                 this.gameState = gameStates.MENU;
                 this.stopTimer();
                 break;
@@ -63,19 +64,16 @@ export class Controller {
             case "startGameButton":
                 this.startGame();
                 break;
-            case "backToMenuButton":
-                this.gameState = gameStates.MENU;
-                this.stopTimer();
-                break;
         }
     }
 
     startGame() {
         if (!this.model.getIfWordsAreLoaded()) {
-            console.log("Words not loaded yet! Try again in a moment.");
+            alert("Words not loaded yet! Try again in a moment.");
             return;
         }
 
+        this.view.end.style.display = "none";
         this.gameState = gameStates.GAME;
         this.attemptsLeft = this.gameChallenge.hearts;
         this.guessedLetters = [];
@@ -111,6 +109,7 @@ export class Controller {
         // dan vul de resterende letters in
         // en stop het spel
         if ( this.attemptsLeft !== 0 ) return;
+
         for ( const char of this.wordToGuess ) {
             if ( this.guessedLetters.includes(char) ) continue;
             this.notGuessedLetters.push(char);
@@ -122,8 +121,16 @@ export class Controller {
         // check of het woord klopt
         if ( word !== this.wordToGuess ) {
             if ( !this.gameChallenge.fixedAttempts ) this.attemptsLeft--;
-            return;
+            if ( this.attemptsLeft > 0 ) {
+                this.view.hangman.trigger("stressed");
+                return;
+            } else {
+                this.view.hangman.trigger("death");
+                return;
+            }
         }
+
+        this.view.hangman.trigger("happy");
 
         // vul de resterende ontbrekende letters in
         for ( const char of word ) {
@@ -143,12 +150,26 @@ export class Controller {
             this.guessedLetters.push(letter);
         } else {
             if ( !this.gameChallenge.fixedAttempts ) this.attemptsLeft--;
-            return;
+            if ( this.attemptsLeft > 0 ) {
+                this.view.hangman.trigger("stressed");
+                return;
+            } else {
+                this.view.hangman.trigger("death");
+                return;
+            }
         }
         if ( !this.wordToGuess.includes(letter) ) {
             if ( !this.gameChallenge.fixedAttempts ) this.attemptsLeft--;
-            return;
+            if ( this.attemptsLeft > 0 ) {
+                this.view.hangman.trigger("stressed");
+                return;
+            } else {
+                this.view.hangman.trigger("death");
+                return;
+            }
         }
+
+        this.view.hangman.trigger("happy");
 
         // check of de letter het woord raadt
         let winCheck = true;
@@ -197,6 +218,39 @@ export class Controller {
     }
 
 
+    // saveScore
+    saveScore() {
+        const name = nameInput.value.trim();
+
+        if (name === "") {
+            alert("Enter a name first.");
+            return;
+        }
+
+        // Get existing scores (or empty array if none exist)
+        let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+        // Add new score
+        scores.push({
+            name: name,
+            score: this.score,
+            challenge: this.gameChallenge
+        });
+
+        // Save back to localStorage
+        localStorage.setItem("scores", JSON.stringify(scores));
+    }
+
+    removeScore(index) {
+        let scores = JSON.parse(localStorage.getItem("scores")) || [];
+
+        scores.splice(index, 1);
+
+        localStorage.setItem("scores", JSON.stringify(scores));
+        this.view.renderedScoreView = false;
+    }
+
+
     // getters
     getGameStates() {
         return gameStates;
@@ -230,10 +284,14 @@ export class Controller {
         return this.attemptsLeft;
     }
 
+    getGameChallenge() {
+        return this.gameChallenge;
+    }
+
     
     // Setters
     setGameChallenge(challenges) {
-        this.gameChallenge.hearts = challenges.lessHearts ? 5 : 7;
+        this.gameChallenge.hearts = challenges.lessHearts ? 5 : 8;
         this.gameChallenge.words = challenges.difficultWords ? "difficult" : "easy";
         this.gameChallenge.time = challenges.lessTime ? 300 : 600;
         this.gameChallenge.fixedAttempts = challenges.fixedAttempts;

@@ -1,6 +1,7 @@
 export class Hangman {
-    constructor(controller) {
+    constructor(controller, view) {
         this.controller = controller;
+        this.view = view;
 
         this.area = document.getElementById("hangmanArea");
         this.hangman = document.getElementById("hangman");
@@ -34,6 +35,21 @@ export class Hangman {
             const img = new Image();
             img.src = `Assets/Animations/running/${String(i)}.png`;
             this.runFrames.push(img);
+        }
+        for (let i = 1; i <= 31; i++) {
+            const img = new Image();
+            img.src = `Assets/Animations/happy/${String(i)}.png`;
+            this.happyFrames.push(img);
+        }
+        for (let i = 1; i <= 24; i++) {
+            const img = new Image();
+            img.src = `Assets/Animations/stressed/${String(i)}.png`;
+            this.stressedFrames.push(img);
+        }
+        for (let i = 1; i <= 72; i++) {
+            const img = new Image();
+            img.src = `Assets/Animations/death/${String(i)}.png`;
+            this.deathFrames.push(img);
         }
     }
 
@@ -74,13 +90,37 @@ export class Hangman {
                 }, this.frameSpeed);
             }
             if ( ani === "happy" ) {
-                this.happy();
+                this.frame = 1;
+                this.totalFrames = 31;
+                this.frameSpeed = 20;
+
+                this.hangman.style.transform = `translateX(${-20}px)`;
+
+                this.animation = setInterval(() => {
+                    this.happy();
+                }, this.frameSpeed);
             }
             if ( ani === "stressed" ) {
-                this.stressed();
+                this.frame = 1;
+                this.totalFrames = 24;
+                this.frameSpeed = 35;
+
+                this.hangman.style.transform = `translateX(${-20}px)`;
+
+                this.animation = setInterval(() => {
+                    this.stressed();
+                }, this.frameSpeed);
             }
             if ( ani === "death" ) {
-                this.death();
+                this.frame = 1;
+                this.totalFrames = 72;
+                this.frameSpeed = 55;
+
+                this.hangman.style.transform = `translateX(${-20}px)`;
+
+                this.animation = setInterval(() => {
+                    this.death();
+                }, this.frameSpeed);
             }
         });
     }
@@ -107,20 +147,31 @@ export class Hangman {
     }
 
     happy() {
-        this.hangman.className = "happy";
-        setTimeout(() => {
-            this.hangman.className = "idle"; // go back to idle
-        }, 500);
+        this.frame++;
+        if ( this.frame >= this.totalFrames ) {
+            this.trigger("idle");
+            if ( this.controller.getAttempsLeft() <= 0 ) this.view.endView();;
+            return;
+        }
+        this.hangman.src = this.happyFrames[this.frame].src;
     }
 
     stressed() {
-        this.hangman.className = "stressed";
-        setTimeout(() => {
-            this.hangman.className = "idle";
-        }, 500);
+        this.frame++;
+        if ( this.frame >= this.totalFrames ) {
+            this.trigger("idle");
+            return;
+        }
+        this.hangman.src = this.stressedFrames[this.frame].src;
     }
 
     death() {
-        this.hangman.className = "death";
+        this.frame++;
+        if ( this.frame >= this.totalFrames ) {
+            this.stopAnimations();
+            this.view.endView();
+            return;
+        }
+        this.hangman.src = this.deathFrames[this.frame].src;
     }
 }
