@@ -12,8 +12,8 @@ export class View {
         this.gameContainer = document.querySelector(".gameContainer");
         this.wordToGuess = document.getElementById("word");
         this.letters = document.getElementById("letters");
-        this.time = document.getElementById("time");
-        this.score = document.getElementById("score");
+        this.timeText = document.getElementById("time");
+        this.scoreText = document.getElementById("score");
         this.heartsArea = document.getElementById("heartsArea");
         this.end = document.querySelector(".endScreen");
         this.endArea = document.getElementById("endScreenChallengesContent");
@@ -59,6 +59,13 @@ export class View {
     gameView(){
         const guessedLetters = this.controller.getGuessedLetters();
 
+        this.heartsView();
+        this.wordsView();
+        this.alphabetView();
+        this.timeAndScoreView();
+    }
+
+    heartsView() {
         // laat zien hoeveel levens de speler nog over heeft
         const attemptsLeft = this.controller.getAttempsLeft();
         let hearts = "";
@@ -66,9 +73,12 @@ export class View {
             hearts += `<div id="heart"></div>`;
         }
         this.heartsArea.innerHTML = hearts;
-        
+    }
+
+    wordsView() {
         // de letters die geraden zijn worden hier getekend
         // letters die niet geraden zijn worden in het rood getekend
+        const guessedLetters = this.controller.getGuessedLetters();
         let word = "";
         const wordToGuess = this.controller.getWordToGuess();
         const notGuessedLetters = this.controller.getNotGuessedLetters();
@@ -84,9 +94,12 @@ export class View {
             word += `<span id="letter"> </span>`
         }
         this.wordToGuess.innerHTML = word;
+    }
 
+    alphabetView() {
         // het alfabet word hier getekend
         // letters die de speler al gespeeld heeft worden in het rood getekend
+        const guessedLetters = this.controller.getGuessedLetters();
         let alphabet = "abcdefghijklmnopqrstuvwxyz";
         let letters = ""
         for ( const char of alphabet ) {
@@ -97,41 +110,45 @@ export class View {
             letters += `<span id="alphabet">${char}</span>`
         }
         this.letters.innerHTML = letters;
+    }
 
-
+    timeAndScoreView() {
         // hier word de resterende tijd getekend
         const time = this.controller.getTimer();
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
-        this.time.textContent = `Time Left: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+        this.timeText.textContent = `Time Left: ${minutes}:${seconds.toString().padStart(2, "0")}`;
 
 
         // hier word de behaalde score getekend
         const score = this.controller.getScore();
-        this.score.textContent = `Score: ${score}`;
+        this.scoreText.textContent = `Score: ${score}`;
     }
 
     endView() {
         this.end.style.display = "block";
         const score = this.controller.getScore();
         let html = "";
-        html += `Your score: ${score}<br>`;
-        html += `<br>`;
+        html += `<h3 style="font-size: clamp(10px, 1em, 70px); margin: 0px;">Your score: ${score}</h3>`;
         if ( this.controller.getGameChallenge().hearts !== 8 ) {
-            html += `<i class="fa-solid fa-heart-crack" style="margin-right: 20px;"></i>
-            ${this.controller.getGameChallenge().hearts} hearts <br>`;
+            html += `<h3 style="font-size: clamp(10px, 20%, 70px); margin: 5px;">
+            <i class="fa-solid fa-heart-crack" style="margin-right: 20px; font-size: clamp(8px, 10%, 70px);"></i>
+            ${this.controller.getGameChallenge().hearts} hearts </h3>`;
         }
         if ( this.controller.getGameChallenge().words !== "easy" ) {
-            html += `<i class="fa-solid fa-language" style="margin-right: 20px;"></i>
-            difficult words <br>`;
+            html += `<h3 style="font-size: clamp(10px, 20%, 70px); margin: 5px;">
+            <i class="fa-solid fa-language" style="margin-right: 20px; font-size: clamp(8px, 10%, 70px);"></i>
+            difficult words </h3>`;
         }
         if ( this.controller.getGameChallenge().time !== 600 ) {
-            html += `<i class="fa-solid fa-clock" style="margin-right: 20px;"></i>
-            ${this.controller.getGameChallenge().time / 60} minutes <br>`;
+            html += `<h3 style="font-size: clamp(10px, 20%, 70px); margin: 5px;">
+            <i class="fa-solid fa-clock" style="margin-right: 20px; font-size: clamp(8px, 10%, 70px);"></i>
+            ${this.controller.getGameChallenge().time / 60} minutes</h3>`;
         }
         if ( this.controller.getGameChallenge().fixedAttempts !== false ) {
-            html += `<i class="fa-solid fa-lock" style="margin-right: 20px;"></i>
-            fixed attempts <br>`;
+            html += `<h3 style="font-size: clamp(10px, 20%, 70px); margin: 5px;">
+            <i class="fa-solid fa-lock" style="margin-right: 20px; font-size: clamp(8px, 10%, 70px);"></i>
+            fixed attempts</h3>`;
         }
         this.endArea.innerHTML = html;
     }
